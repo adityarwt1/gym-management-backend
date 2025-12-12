@@ -13,19 +13,21 @@ export class OtpService {
   }
 
   async sendOTP(phone: string) {
+    const formatedPhone = phone.startsWith('+') ? phone : `+91${phone}`;
     return await this.client.verify.v2
       .services(process.env.TWILIO_VERIFY_SERVICE_SID!)
       .verifications.create({
-        to: phone,
+        to: formatedPhone,
         channel: 'sms',
       });
   }
 
   async verifyOTP(phone: string, code: string) {
+    const formatedPhone = phone.startsWith('+') ? phone : `+91${phone}`;
     return await this.client.verify.v2
       .services(process.env.TWILIO_VERIFY_SERVICE_SID!)
       .verificationChecks.create({
-        to: phone,
+        to: formatedPhone,
         code,
       });
   }

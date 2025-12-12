@@ -4,6 +4,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
   ConflictException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -102,6 +103,26 @@ export class UserService {
     };
   }
 
+  async verify(token: string) {
+    try {
+      const decoded = this.jwtService.verify(token);
+
+      if (!decoded) {
+        throw new BadRequestException('Invalid token');
+      }
+
+      if (new Date() > new Date(decoded.exp * 1000)) {
+        throw new UnauthorizedException();
+      }
+      const response = {
+        success: true,
+        user: decoded,
+      };
+      return response;
+    } catch (error) {
+      throw new InternalServerErrorException((error as Error).message);
+    }
+  }
   /**
    * SHARED HELPER
    */

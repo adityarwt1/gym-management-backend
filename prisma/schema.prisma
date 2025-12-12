@@ -88,7 +88,7 @@ enum FollowUpStatus {
 }
 
 model User {
-  uid         String    @id
+  uid         String    @id @unique
   displayName String
   email       String
   photoURL    String

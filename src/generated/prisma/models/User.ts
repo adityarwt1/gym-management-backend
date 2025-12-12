@@ -194,7 +194,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   email?: Prisma.StringFilter<"User"> | string
   photoURL?: Prisma.StringFilter<"User"> | string
   merchant?: Prisma.XOR<Prisma.MerchantNullableScalarRelationFilter, Prisma.MerchantWhereInput> | null
-}, "uid">
+}, "uid" | "uid">
 
 export type UserOrderByWithAggregationInput = {
   uid?: Prisma.SortOrder

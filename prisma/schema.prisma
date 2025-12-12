@@ -88,17 +88,19 @@ enum FollowUpStatus {
 }
 
 model User {
-  uid         String     @id
+  uid         String    @id
   displayName String
   email       String
   photoURL    String
-  merchants   Merchant[]
+  merchant    Merchant?
 }
 
 model Merchant {
-  id           Int     @id @default(autoincrement())
-  uid          String
-  user         User    @relation(fields: [uid], references: [uid])
+  id  Int    @id @default(autoincrement())
+  uid String @unique
+
+  user User @relation(fields: [uid], references: [uid])
+
   gymName      String
   firstName    String
   lastName     String

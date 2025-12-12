@@ -2,11 +2,9 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { MerchantModule } from './merchant/merchant.module';
 import { LeadsModule } from './leads/leads.module';
-import { RegisterModule } from './user/register.module';
 import { UserModule } from './user/user.module';
 
 @Module({
@@ -15,10 +13,10 @@ import { UserModule } from './user/user.module';
       isGlobal: true, // Makes ConfigModule available everywhere
     }),
     PrismaModule,
-    UsersModule,
+    UserModule,
     MerchantModule,
     LeadsModule,
-    RegisterModule,
+    UserModule,
     UserModule,
   ],
   controllers: [AppController],

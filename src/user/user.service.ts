@@ -3,115 +3,115 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  ConflictException,
 } from '@nestjs/common';
-import { Prisma } from '../generated/prisma/client';
-import prisma from 'lib/prisma';
-import jwt from 'jsonwebtoken';
+import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { PrismaService } from '../prisma/prisma.service';
+import { Prisma } from '../generated/prisma/client';
+
 @Injectable()
 export class UserService {
+  constructor(
+    private prisma: PrismaService,
+    private jwtService: JwtService,
+  ) {}
+
+  /**
+   * CREATE USER
+   */
   async create(data: CreateUserDto) {
-    // field validation for the register
-    if (!data.displayName || !data.email || !data.photoURL || !data.uid) {
-      throw new BadRequestException('Field not provided properly!');
+    // Check if user already exists
+    if (!data.uid || !data.displayName || !data.email || !data.photoURL) {
+      throw new BadRequestException();
     }
-    const user = await prisma.user.create({ data });
+    const existing = await this.prisma.user.findUnique({
+      where: { uid: data.uid },
+    });
 
-    // if by chance failed to conenction
-    if (!user) {
-      throw new InternalServerErrorException('Failed to create user.');
+    if (existing) {
+      throw new ConflictException('User already exists.');
     }
 
-    // creting token payload
-    const tokenPayLoad = {
-      uid: user.uid,
-    };
     try {
-      const token = jwt.sign(tokenPayLoad, process.env.JWT_SECRET as string, {
-        expiresIn: '7d', // for sevel day validate,
-        issuer: 'WellVantege',
-      });
-      const response = {
+      const user = await this.prisma.user.create({ data });
+
+      // Generate JWT
+      const token = this.jwtService.sign(
+        { uid: user.uid },
+        {
+          expiresIn: '7d',
+          issuer: 'WellVantage',
+        },
+      );
+
+      return {
         success: true,
         token,
+        user,
       };
-      return response;
     } catch (error) {
-      throw new InternalServerErrorException('Failed to create token.', {
-        description: 'maybe jwt secret not provided properly.',
-      });
+      throw new InternalServerErrorException('Failed to create user.');
     }
-    /// final valur for the
   }
 
+  /**
+   * GET USER BY UID
+   */
   async findOne(uid: string) {
-    const user = await prisma.user.findUnique({
-      where: {
-        uid,
-      },
+    const user = await this.prisma.user.findUnique({
+      where: { uid },
     });
 
     if (!user) {
       throw new NotFoundException('User not found.');
     }
 
-    const response = {
-      succuss: true,
+    return {
+      success: true,
       user,
     };
-    return response;
   }
 
+  /**
+   * UPDATE USER
+   */
   async update(uid: string, data: UpdateUserDto) {
-    const user = await prisma.user.findUnique({
-      where: {
-        uid,
-      },
-    });
-    // if not found
-    if (!user) {
-      throw new NotFoundException('User not found.');
-    }
+    await this.ensureUserExists(uid);
 
-    const upadteUser = await prisma.user.update({
-      where: {
-        uid,
-      },
+    const updated = await this.prisma.user.update({
+      where: { uid },
       data,
     });
 
-    if (!upadteUser) {
-      throw new InternalServerErrorException('Failed to update user.');
-    }
-    const response = {
-      succees: true,
-      user: upadteUser,
+    return {
+      success: true,
+      user: updated,
     };
-    return response;
   }
 
+  /**
+   * DELETE USER
+   */
   async remove(uid: string) {
-    const user = await prisma.user.findUnique({
-      where: {
-        uid,
-      },
+    await this.ensureUserExists(uid);
+
+    await this.prisma.user.delete({
+      where: { uid },
     });
 
-    if (!user) {
-      throw new NotFoundException('User not found.');
-    }
-
-    await prisma.user.delete({
-      where: {
-        uid,
-      },
-    });
-
-    const response = {
-      succuss: true,
-      message: 'user deleted successfully.',
+    return {
+      success: true,
+      message: 'User deleted successfully.',
     };
-    return response;
+  }
+
+  /**
+   * SHARED HELPER
+   */
+  private async ensureUserExists(uid: string) {
+    const user = await this.prisma.user.findUnique({ where: { uid } });
+    if (!user) throw new NotFoundException('User not found.');
   }
 }

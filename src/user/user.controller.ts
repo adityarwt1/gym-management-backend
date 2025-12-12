@@ -16,18 +16,18 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  async create(@Body() createUserDto: CreateUserDto) {
-    return await this.userService.create(createUserDto);
+  async create(@Body() data: CreateUserDto) {
+    return this.userService.create(data);
   }
 
   @Get(':uid')
   async findOne(@Param('uid') uid: string) {
-    return await this.userService.findOne(uid);
+    return this.userService.findOne(uid);
   }
 
   @Patch(':uid')
-  update(@Param('uid') uid: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(uid, updateUserDto);
+  update(@Param('uid') uid: string, @Body() dto: UpdateUserDto) {
+    return this.userService.update(uid, dto);
   }
 
   @Delete(':uid')

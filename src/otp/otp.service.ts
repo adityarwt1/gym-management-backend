@@ -13,7 +13,7 @@ export class OtpService {
   }
 
   async sendOTP(phone: string) {
-    return this.client.verify.v2
+    return await this.client.verify.v2
       .services(process.env.TWILIO_VERIFY_SERVICE_SID!)
       .verifications.create({
         to: phone,
@@ -22,7 +22,7 @@ export class OtpService {
   }
 
   async verifyOTP(phone: string, code: string) {
-    return this.client.verify.v2
+    return await this.client.verify.v2
       .services(process.env.TWILIO_VERIFY_SERVICE_SID!)
       .verificationChecks.create({
         to: phone,

@@ -14,12 +14,6 @@ datasource db {
   provider = "postgresql"
 }
 
-/**
- * ============================
- * ENUMS
- * =============================
- */
-
 enum Gender {
   MALE
   FEMALE
@@ -92,12 +86,6 @@ enum FollowUpStatus {
   CONVERTED
   ARCHIVED
 }
-
-/**
- * ============================
- * MODELS
- * =============================
- */
 
 model Merchant {
   id           Int     @id @default(autoincrement())

@@ -7,9 +7,18 @@ export class MerchantService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: Prisma.MerchantCreateInput) {
-    return this.prisma.merchant.create({
+    /// validation of field
+    
+    const created = this.prisma.merchant.create({
       data,
     });
+
+    const responseMessage = {
+      success: true,
+      message: 'Merchant created ',
+      created,
+    };
+    return responseMessage;
   }
 
   async findAll() {

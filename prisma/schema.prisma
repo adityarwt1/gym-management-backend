@@ -99,7 +99,7 @@ model Merchant {
   id  Int    @id @default(autoincrement())
   uid String @unique
 
-  user User @relation(fields: [uid], references: [uid])
+  user User? @relation(fields: [uid], references: [uid])
 
   gymName      String
   firstName    String

@@ -264,7 +264,7 @@ export type MerchantWhereInput = {
   state?: Prisma.StringFilter<"Merchant"> | string
   country?: Prisma.StringFilter<"Merchant"> | string
   phoneNumber?: Prisma.StringFilter<"Merchant"> | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   leads?: Prisma.LeadsListRelationFilter
 }
 
@@ -299,7 +299,7 @@ export type MerchantWhereUniqueInput = Prisma.AtLeast<{
   state?: Prisma.StringFilter<"Merchant"> | string
   country?: Prisma.StringFilter<"Merchant"> | string
   phoneNumber?: Prisma.StringFilter<"Merchant"> | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   leads?: Prisma.LeadsListRelationFilter
 }, "id" | "uid">
 
@@ -349,7 +349,7 @@ export type MerchantCreateInput = {
   state: string
   country: string
   phoneNumber: string
-  user: Prisma.UserCreateNestedOneWithoutMerchantInput
+  user?: Prisma.UserCreateNestedOneWithoutMerchantInput
   leads?: Prisma.LeadsCreateNestedManyWithoutAssignedToInput
 }
 
@@ -378,7 +378,7 @@ export type MerchantUpdateInput = {
   state?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  user?: Prisma.UserUpdateOneRequiredWithoutMerchantNestedInput
+  user?: Prisma.UserUpdateOneWithoutMerchantNestedInput
   leads?: Prisma.LeadsUpdateManyWithoutAssignedToNestedInput
 }
 
@@ -632,7 +632,7 @@ export type MerchantCreateWithoutLeadsInput = {
   state: string
   country: string
   phoneNumber: string
-  user: Prisma.UserCreateNestedOneWithoutMerchantInput
+  user?: Prisma.UserCreateNestedOneWithoutMerchantInput
 }
 
 export type MerchantUncheckedCreateWithoutLeadsInput = {
@@ -675,7 +675,7 @@ export type MerchantUpdateWithoutLeadsInput = {
   state?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  user?: Prisma.UserUpdateOneRequiredWithoutMerchantNestedInput
+  user?: Prisma.UserUpdateOneWithoutMerchantNestedInput
 }
 
 export type MerchantUncheckedUpdateWithoutLeadsInput = {
@@ -735,7 +735,7 @@ export type MerchantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   state?: boolean
   country?: boolean
   phoneNumber?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.Merchant$userArgs<ExtArgs>
   leads?: boolean | Prisma.Merchant$leadsArgs<ExtArgs>
   _count?: boolean | Prisma.MerchantCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["merchant"]>
@@ -752,7 +752,7 @@ export type MerchantSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   state?: boolean
   country?: boolean
   phoneNumber?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.Merchant$userArgs<ExtArgs>
 }, ExtArgs["result"]["merchant"]>
 
 export type MerchantSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -767,7 +767,7 @@ export type MerchantSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   state?: boolean
   country?: boolean
   phoneNumber?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.Merchant$userArgs<ExtArgs>
 }, ExtArgs["result"]["merchant"]>
 
 export type MerchantSelectScalar = {
@@ -786,21 +786,21 @@ export type MerchantSelectScalar = {
 
 export type MerchantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "uid" | "gymName" | "firstName" | "lastName" | "addressLine1" | "addressLine2" | "city" | "state" | "country" | "phoneNumber", ExtArgs["result"]["merchant"]>
 export type MerchantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.Merchant$userArgs<ExtArgs>
   leads?: boolean | Prisma.Merchant$leadsArgs<ExtArgs>
   _count?: boolean | Prisma.MerchantCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MerchantIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.Merchant$userArgs<ExtArgs>
 }
 export type MerchantIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.Merchant$userArgs<ExtArgs>
 }
 
 export type $MerchantPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Merchant"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs>
+    user: Prisma.$UserPayload<ExtArgs> | null
     leads: Prisma.$LeadsPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1209,7 +1209,7 @@ readonly fields: MerchantFieldRefs;
  */
 export interface Prisma__MerchantClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.Merchant$userArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Merchant$userArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   leads<T extends Prisma.Merchant$leadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Merchant$leadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1644,6 +1644,25 @@ export type MerchantDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Limit how many Merchants to delete.
    */
   limit?: number
+}
+
+/**
+ * Merchant.user
+ */
+export type Merchant$userArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**

@@ -36,4 +36,7 @@ export class CreateMerchantDto {
   @IsString()
   @IsNotEmpty()
   phoneNumber: string;
+
+  @IsString()
+  uid: string;
 }

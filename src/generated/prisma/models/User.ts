@@ -290,9 +290,9 @@ export type UserMinOrderByAggregateInput = {
   photoURL?: Prisma.SortOrder
 }
 
-export type UserScalarRelationFilter = {
-  is?: Prisma.UserWhereInput
-  isNot?: Prisma.UserWhereInput
+export type UserNullableScalarRelationFilter = {
+  is?: Prisma.UserWhereInput | null
+  isNot?: Prisma.UserWhereInput | null
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -305,10 +305,12 @@ export type UserCreateNestedOneWithoutMerchantInput = {
   connect?: Prisma.UserWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutMerchantNestedInput = {
+export type UserUpdateOneWithoutMerchantNestedInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutMerchantInput, Prisma.UserUncheckedCreateWithoutMerchantInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutMerchantInput
   upsert?: Prisma.UserUpsertWithoutMerchantInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMerchantInput, Prisma.UserUpdateWithoutMerchantInput>, Prisma.UserUncheckedUpdateWithoutMerchantInput>
 }

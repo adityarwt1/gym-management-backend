@@ -51,6 +51,7 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  User: 'User',
   Merchant: 'Merchant',
   LeadNote: 'LeadNote',
   Leads: 'Leads'
@@ -72,8 +73,19 @@ export const TransactionIsolationLevel = {
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const UserScalarFieldEnum = {
+  uid: 'uid',
+  displayName: 'displayName',
+  email: 'email',
+  photoURL: 'photoURL'
+} as const
+
+export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
 export const MerchantScalarFieldEnum = {
   id: 'id',
+  uid: 'uid',
   gymName: 'gymName',
   firstName: 'firstName',
   lastName: 'lastName',

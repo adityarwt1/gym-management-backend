@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { MerchantModule } from './merchant/merchant.module';
 import { LeadsModule } from './leads/leads.module';
+import { RegisterModule } from './register/register.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { LeadsModule } from './leads/leads.module';
     UsersModule,
     MerchantModule,
     LeadsModule,
+    RegisterModule,
   ],
   controllers: [AppController],
   providers: [AppService],

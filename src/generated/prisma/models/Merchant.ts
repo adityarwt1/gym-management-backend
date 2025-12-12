@@ -36,6 +36,7 @@ export type MerchantSumAggregateOutputType = {
 
 export type MerchantMinAggregateOutputType = {
   id: number | null
+  uid: string | null
   gymName: string | null
   firstName: string | null
   lastName: string | null
@@ -49,6 +50,7 @@ export type MerchantMinAggregateOutputType = {
 
 export type MerchantMaxAggregateOutputType = {
   id: number | null
+  uid: string | null
   gymName: string | null
   firstName: string | null
   lastName: string | null
@@ -62,6 +64,7 @@ export type MerchantMaxAggregateOutputType = {
 
 export type MerchantCountAggregateOutputType = {
   id: number
+  uid: number
   gymName: number
   firstName: number
   lastName: number
@@ -85,6 +88,7 @@ export type MerchantSumAggregateInputType = {
 
 export type MerchantMinAggregateInputType = {
   id?: true
+  uid?: true
   gymName?: true
   firstName?: true
   lastName?: true
@@ -98,6 +102,7 @@ export type MerchantMinAggregateInputType = {
 
 export type MerchantMaxAggregateInputType = {
   id?: true
+  uid?: true
   gymName?: true
   firstName?: true
   lastName?: true
@@ -111,6 +116,7 @@ export type MerchantMaxAggregateInputType = {
 
 export type MerchantCountAggregateInputType = {
   id?: true
+  uid?: true
   gymName?: true
   firstName?: true
   lastName?: true
@@ -211,6 +217,7 @@ export type MerchantGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 
 export type MerchantGroupByOutputType = {
   id: number
+  uid: string
   gymName: string
   firstName: string
   lastName: string
@@ -247,6 +254,7 @@ export type MerchantWhereInput = {
   OR?: Prisma.MerchantWhereInput[]
   NOT?: Prisma.MerchantWhereInput | Prisma.MerchantWhereInput[]
   id?: Prisma.IntFilter<"Merchant"> | number
+  uid?: Prisma.StringFilter<"Merchant"> | string
   gymName?: Prisma.StringFilter<"Merchant"> | string
   firstName?: Prisma.StringFilter<"Merchant"> | string
   lastName?: Prisma.StringFilter<"Merchant"> | string
@@ -256,11 +264,13 @@ export type MerchantWhereInput = {
   state?: Prisma.StringFilter<"Merchant"> | string
   country?: Prisma.StringFilter<"Merchant"> | string
   phoneNumber?: Prisma.StringFilter<"Merchant"> | string
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   leads?: Prisma.LeadsListRelationFilter
 }
 
 export type MerchantOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  uid?: Prisma.SortOrder
   gymName?: Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
@@ -270,6 +280,7 @@ export type MerchantOrderByWithRelationInput = {
   state?: Prisma.SortOrder
   country?: Prisma.SortOrder
   phoneNumber?: Prisma.SortOrder
+  user?: Prisma.UserOrderByWithRelationInput
   leads?: Prisma.LeadsOrderByRelationAggregateInput
 }
 
@@ -278,6 +289,7 @@ export type MerchantWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.MerchantWhereInput | Prisma.MerchantWhereInput[]
   OR?: Prisma.MerchantWhereInput[]
   NOT?: Prisma.MerchantWhereInput | Prisma.MerchantWhereInput[]
+  uid?: Prisma.StringFilter<"Merchant"> | string
   gymName?: Prisma.StringFilter<"Merchant"> | string
   firstName?: Prisma.StringFilter<"Merchant"> | string
   lastName?: Prisma.StringFilter<"Merchant"> | string
@@ -287,11 +299,13 @@ export type MerchantWhereUniqueInput = Prisma.AtLeast<{
   state?: Prisma.StringFilter<"Merchant"> | string
   country?: Prisma.StringFilter<"Merchant"> | string
   phoneNumber?: Prisma.StringFilter<"Merchant"> | string
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   leads?: Prisma.LeadsListRelationFilter
 }, "id">
 
 export type MerchantOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  uid?: Prisma.SortOrder
   gymName?: Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
@@ -313,6 +327,7 @@ export type MerchantScalarWhereWithAggregatesInput = {
   OR?: Prisma.MerchantScalarWhereWithAggregatesInput[]
   NOT?: Prisma.MerchantScalarWhereWithAggregatesInput | Prisma.MerchantScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Merchant"> | number
+  uid?: Prisma.StringWithAggregatesFilter<"Merchant"> | string
   gymName?: Prisma.StringWithAggregatesFilter<"Merchant"> | string
   firstName?: Prisma.StringWithAggregatesFilter<"Merchant"> | string
   lastName?: Prisma.StringWithAggregatesFilter<"Merchant"> | string
@@ -334,11 +349,13 @@ export type MerchantCreateInput = {
   state: string
   country: string
   phoneNumber: string
+  user: Prisma.UserCreateNestedOneWithoutMerchantsInput
   leads?: Prisma.LeadsCreateNestedManyWithoutAssignedToInput
 }
 
 export type MerchantUncheckedCreateInput = {
   id?: number
+  uid: string
   gymName: string
   firstName: string
   lastName: string
@@ -361,11 +378,13 @@ export type MerchantUpdateInput = {
   state?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  user?: Prisma.UserUpdateOneRequiredWithoutMerchantsNestedInput
   leads?: Prisma.LeadsUpdateManyWithoutAssignedToNestedInput
 }
 
 export type MerchantUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  uid?: Prisma.StringFieldUpdateOperationsInput | string
   gymName?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -380,6 +399,7 @@ export type MerchantUncheckedUpdateInput = {
 
 export type MerchantCreateManyInput = {
   id?: number
+  uid: string
   gymName: string
   firstName: string
   lastName: string
@@ -405,6 +425,7 @@ export type MerchantUpdateManyMutationInput = {
 
 export type MerchantUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  uid?: Prisma.StringFieldUpdateOperationsInput | string
   gymName?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -416,8 +437,19 @@ export type MerchantUncheckedUpdateManyInput = {
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
+export type MerchantListRelationFilter = {
+  every?: Prisma.MerchantWhereInput
+  some?: Prisma.MerchantWhereInput
+  none?: Prisma.MerchantWhereInput
+}
+
+export type MerchantOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
+}
+
 export type MerchantCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  uid?: Prisma.SortOrder
   gymName?: Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
@@ -435,6 +467,7 @@ export type MerchantAvgOrderByAggregateInput = {
 
 export type MerchantMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  uid?: Prisma.SortOrder
   gymName?: Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
@@ -448,6 +481,7 @@ export type MerchantMaxOrderByAggregateInput = {
 
 export type MerchantMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  uid?: Prisma.SortOrder
   gymName?: Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
@@ -468,8 +502,46 @@ export type MerchantNullableScalarRelationFilter = {
   isNot?: Prisma.MerchantWhereInput | null
 }
 
-export type StringFieldUpdateOperationsInput = {
-  set?: string
+export type MerchantCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.MerchantCreateWithoutUserInput, Prisma.MerchantUncheckedCreateWithoutUserInput> | Prisma.MerchantCreateWithoutUserInput[] | Prisma.MerchantUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.MerchantCreateOrConnectWithoutUserInput | Prisma.MerchantCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.MerchantCreateManyUserInputEnvelope
+  connect?: Prisma.MerchantWhereUniqueInput | Prisma.MerchantWhereUniqueInput[]
+}
+
+export type MerchantUncheckedCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.MerchantCreateWithoutUserInput, Prisma.MerchantUncheckedCreateWithoutUserInput> | Prisma.MerchantCreateWithoutUserInput[] | Prisma.MerchantUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.MerchantCreateOrConnectWithoutUserInput | Prisma.MerchantCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.MerchantCreateManyUserInputEnvelope
+  connect?: Prisma.MerchantWhereUniqueInput | Prisma.MerchantWhereUniqueInput[]
+}
+
+export type MerchantUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.MerchantCreateWithoutUserInput, Prisma.MerchantUncheckedCreateWithoutUserInput> | Prisma.MerchantCreateWithoutUserInput[] | Prisma.MerchantUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.MerchantCreateOrConnectWithoutUserInput | Prisma.MerchantCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.MerchantUpsertWithWhereUniqueWithoutUserInput | Prisma.MerchantUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.MerchantCreateManyUserInputEnvelope
+  set?: Prisma.MerchantWhereUniqueInput | Prisma.MerchantWhereUniqueInput[]
+  disconnect?: Prisma.MerchantWhereUniqueInput | Prisma.MerchantWhereUniqueInput[]
+  delete?: Prisma.MerchantWhereUniqueInput | Prisma.MerchantWhereUniqueInput[]
+  connect?: Prisma.MerchantWhereUniqueInput | Prisma.MerchantWhereUniqueInput[]
+  update?: Prisma.MerchantUpdateWithWhereUniqueWithoutUserInput | Prisma.MerchantUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.MerchantUpdateManyWithWhereWithoutUserInput | Prisma.MerchantUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.MerchantScalarWhereInput | Prisma.MerchantScalarWhereInput[]
+}
+
+export type MerchantUncheckedUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.MerchantCreateWithoutUserInput, Prisma.MerchantUncheckedCreateWithoutUserInput> | Prisma.MerchantCreateWithoutUserInput[] | Prisma.MerchantUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.MerchantCreateOrConnectWithoutUserInput | Prisma.MerchantCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.MerchantUpsertWithWhereUniqueWithoutUserInput | Prisma.MerchantUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.MerchantCreateManyUserInputEnvelope
+  set?: Prisma.MerchantWhereUniqueInput | Prisma.MerchantWhereUniqueInput[]
+  disconnect?: Prisma.MerchantWhereUniqueInput | Prisma.MerchantWhereUniqueInput[]
+  delete?: Prisma.MerchantWhereUniqueInput | Prisma.MerchantWhereUniqueInput[]
+  connect?: Prisma.MerchantWhereUniqueInput | Prisma.MerchantWhereUniqueInput[]
+  update?: Prisma.MerchantUpdateWithWhereUniqueWithoutUserInput | Prisma.MerchantUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.MerchantUpdateManyWithWhereWithoutUserInput | Prisma.MerchantUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.MerchantScalarWhereInput | Prisma.MerchantScalarWhereInput[]
 }
 
 export type NullableStringFieldUpdateOperationsInput = {
@@ -500,6 +572,76 @@ export type MerchantUpdateOneWithoutLeadsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.MerchantUpdateToOneWithWhereWithoutLeadsInput, Prisma.MerchantUpdateWithoutLeadsInput>, Prisma.MerchantUncheckedUpdateWithoutLeadsInput>
 }
 
+export type MerchantCreateWithoutUserInput = {
+  gymName: string
+  firstName: string
+  lastName: string
+  addressLine1: string
+  addressLine2?: string | null
+  city: string
+  state: string
+  country: string
+  phoneNumber: string
+  leads?: Prisma.LeadsCreateNestedManyWithoutAssignedToInput
+}
+
+export type MerchantUncheckedCreateWithoutUserInput = {
+  id?: number
+  gymName: string
+  firstName: string
+  lastName: string
+  addressLine1: string
+  addressLine2?: string | null
+  city: string
+  state: string
+  country: string
+  phoneNumber: string
+  leads?: Prisma.LeadsUncheckedCreateNestedManyWithoutAssignedToInput
+}
+
+export type MerchantCreateOrConnectWithoutUserInput = {
+  where: Prisma.MerchantWhereUniqueInput
+  create: Prisma.XOR<Prisma.MerchantCreateWithoutUserInput, Prisma.MerchantUncheckedCreateWithoutUserInput>
+}
+
+export type MerchantCreateManyUserInputEnvelope = {
+  data: Prisma.MerchantCreateManyUserInput | Prisma.MerchantCreateManyUserInput[]
+  skipDuplicates?: boolean
+}
+
+export type MerchantUpsertWithWhereUniqueWithoutUserInput = {
+  where: Prisma.MerchantWhereUniqueInput
+  update: Prisma.XOR<Prisma.MerchantUpdateWithoutUserInput, Prisma.MerchantUncheckedUpdateWithoutUserInput>
+  create: Prisma.XOR<Prisma.MerchantCreateWithoutUserInput, Prisma.MerchantUncheckedCreateWithoutUserInput>
+}
+
+export type MerchantUpdateWithWhereUniqueWithoutUserInput = {
+  where: Prisma.MerchantWhereUniqueInput
+  data: Prisma.XOR<Prisma.MerchantUpdateWithoutUserInput, Prisma.MerchantUncheckedUpdateWithoutUserInput>
+}
+
+export type MerchantUpdateManyWithWhereWithoutUserInput = {
+  where: Prisma.MerchantScalarWhereInput
+  data: Prisma.XOR<Prisma.MerchantUpdateManyMutationInput, Prisma.MerchantUncheckedUpdateManyWithoutUserInput>
+}
+
+export type MerchantScalarWhereInput = {
+  AND?: Prisma.MerchantScalarWhereInput | Prisma.MerchantScalarWhereInput[]
+  OR?: Prisma.MerchantScalarWhereInput[]
+  NOT?: Prisma.MerchantScalarWhereInput | Prisma.MerchantScalarWhereInput[]
+  id?: Prisma.IntFilter<"Merchant"> | number
+  uid?: Prisma.StringFilter<"Merchant"> | string
+  gymName?: Prisma.StringFilter<"Merchant"> | string
+  firstName?: Prisma.StringFilter<"Merchant"> | string
+  lastName?: Prisma.StringFilter<"Merchant"> | string
+  addressLine1?: Prisma.StringFilter<"Merchant"> | string
+  addressLine2?: Prisma.StringNullableFilter<"Merchant"> | string | null
+  city?: Prisma.StringFilter<"Merchant"> | string
+  state?: Prisma.StringFilter<"Merchant"> | string
+  country?: Prisma.StringFilter<"Merchant"> | string
+  phoneNumber?: Prisma.StringFilter<"Merchant"> | string
+}
+
 export type MerchantCreateWithoutLeadsInput = {
   gymName: string
   firstName: string
@@ -510,10 +652,12 @@ export type MerchantCreateWithoutLeadsInput = {
   state: string
   country: string
   phoneNumber: string
+  user: Prisma.UserCreateNestedOneWithoutMerchantsInput
 }
 
 export type MerchantUncheckedCreateWithoutLeadsInput = {
   id?: number
+  uid: string
   gymName: string
   firstName: string
   lastName: string
@@ -551,9 +695,64 @@ export type MerchantUpdateWithoutLeadsInput = {
   state?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  user?: Prisma.UserUpdateOneRequiredWithoutMerchantsNestedInput
 }
 
 export type MerchantUncheckedUpdateWithoutLeadsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  uid?: Prisma.StringFieldUpdateOperationsInput | string
+  gymName?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  addressLine1?: Prisma.StringFieldUpdateOperationsInput | string
+  addressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  state?: Prisma.StringFieldUpdateOperationsInput | string
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type MerchantCreateManyUserInput = {
+  id?: number
+  gymName: string
+  firstName: string
+  lastName: string
+  addressLine1: string
+  addressLine2?: string | null
+  city: string
+  state: string
+  country: string
+  phoneNumber: string
+}
+
+export type MerchantUpdateWithoutUserInput = {
+  gymName?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  addressLine1?: Prisma.StringFieldUpdateOperationsInput | string
+  addressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  state?: Prisma.StringFieldUpdateOperationsInput | string
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  leads?: Prisma.LeadsUpdateManyWithoutAssignedToNestedInput
+}
+
+export type MerchantUncheckedUpdateWithoutUserInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  gymName?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  addressLine1?: Prisma.StringFieldUpdateOperationsInput | string
+  addressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  state?: Prisma.StringFieldUpdateOperationsInput | string
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  leads?: Prisma.LeadsUncheckedUpdateManyWithoutAssignedToNestedInput
+}
+
+export type MerchantUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   gymName?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -599,6 +798,7 @@ export type MerchantCountOutputTypeCountLeadsArgs<ExtArgs extends runtime.Types.
 
 export type MerchantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  uid?: boolean
   gymName?: boolean
   firstName?: boolean
   lastName?: boolean
@@ -608,12 +808,14 @@ export type MerchantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   state?: boolean
   country?: boolean
   phoneNumber?: boolean
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   leads?: boolean | Prisma.Merchant$leadsArgs<ExtArgs>
   _count?: boolean | Prisma.MerchantCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["merchant"]>
 
 export type MerchantSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  uid?: boolean
   gymName?: boolean
   firstName?: boolean
   lastName?: boolean
@@ -623,10 +825,12 @@ export type MerchantSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   state?: boolean
   country?: boolean
   phoneNumber?: boolean
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["merchant"]>
 
 export type MerchantSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  uid?: boolean
   gymName?: boolean
   firstName?: boolean
   lastName?: boolean
@@ -636,10 +840,12 @@ export type MerchantSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   state?: boolean
   country?: boolean
   phoneNumber?: boolean
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["merchant"]>
 
 export type MerchantSelectScalar = {
   id?: boolean
+  uid?: boolean
   gymName?: boolean
   firstName?: boolean
   lastName?: boolean
@@ -651,21 +857,28 @@ export type MerchantSelectScalar = {
   phoneNumber?: boolean
 }
 
-export type MerchantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "gymName" | "firstName" | "lastName" | "addressLine1" | "addressLine2" | "city" | "state" | "country" | "phoneNumber", ExtArgs["result"]["merchant"]>
+export type MerchantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "uid" | "gymName" | "firstName" | "lastName" | "addressLine1" | "addressLine2" | "city" | "state" | "country" | "phoneNumber", ExtArgs["result"]["merchant"]>
 export type MerchantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   leads?: boolean | Prisma.Merchant$leadsArgs<ExtArgs>
   _count?: boolean | Prisma.MerchantCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type MerchantIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type MerchantIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type MerchantIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
+export type MerchantIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
 
 export type $MerchantPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Merchant"
   objects: {
+    user: Prisma.$UserPayload<ExtArgs>
     leads: Prisma.$LeadsPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
+    uid: string
     gymName: string
     firstName: string
     lastName: string
@@ -1069,6 +1282,7 @@ readonly fields: MerchantFieldRefs;
  */
 export interface Prisma__MerchantClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   leads<T extends Prisma.Merchant$leadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Merchant$leadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1100,6 +1314,7 @@ export interface Prisma__MerchantClient<T, Null = never, ExtArgs extends runtime
  */
 export interface MerchantFieldRefs {
   readonly id: Prisma.FieldRef<"Merchant", 'Int'>
+  readonly uid: Prisma.FieldRef<"Merchant", 'String'>
   readonly gymName: Prisma.FieldRef<"Merchant", 'String'>
   readonly firstName: Prisma.FieldRef<"Merchant", 'String'>
   readonly lastName: Prisma.FieldRef<"Merchant", 'String'>
@@ -1358,6 +1573,10 @@ export type MerchantCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extens
    */
   data: Prisma.MerchantCreateManyInput | Prisma.MerchantCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MerchantIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1428,6 +1647,10 @@ export type MerchantUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extens
    * Limit how many Merchants to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MerchantIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

@@ -22,10 +22,6 @@ export class UserService {
    * CREATE USER
    */
   async create(data: CreateUserDto) {
-    // Check if user already exists
-    if (!data.uid || !data.displayName || !data.email || !data.photoURL) {
-      throw new BadRequestException();
-    }
     const existing = await this.prisma.user.findUnique({
       where: { uid: data.uid },
     });
@@ -37,7 +33,6 @@ export class UserService {
     try {
       const user = await this.prisma.user.create({ data });
 
-      // Generate JWT
       const token = this.jwtService.sign(
         { uid: user.uid },
         {

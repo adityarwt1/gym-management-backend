@@ -6,6 +6,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { MerchantModule } from './merchant/merchant.module';
 import { LeadsModule } from './leads/leads.module';
 import { UserModule } from './user/user.module';
+import { OtpModule } from './otp/otp.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { UserModule } from './user/user.module';
     LeadsModule,
     UserModule,
     UserModule,
+    OtpModule,
   ],
   controllers: [AppController],
   providers: [AppService],

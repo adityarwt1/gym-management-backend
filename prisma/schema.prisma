@@ -1,0 +1,180 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/**
+ * ============================
+ * ENUMS
+ * =============================
+ */
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum ActivityLevel {
+  SEDENTARY
+  LIGHTLY_ACTIVE
+  MODERATELY_ACTIVE
+  VERY_ACTIVE
+}
+
+enum WellnessGoal {
+  LOSE_WEIGHT
+  GAIN_WEIGHT
+  BUILD_MUSCLE
+  MODIFY_DIET
+  MANAGE_STRESS
+  IMPROVE_STEP_COUNT
+  GENERAL_WELLNESS
+}
+
+enum FitnessFocus {
+  GYM_WORKOUT
+  YOGA
+  MEDITATION
+  NUTRITION
+  RECOVERY
+}
+
+enum PreferredGymTime {
+  MORNING
+  AFTERNOON
+  EVENING
+  LATE_EVENING
+}
+
+enum WorkoutIntensity {
+  LIGHT
+  MODERATE
+  HIGH
+}
+
+enum MedicalConcern {
+  DIABETES
+  HYPERTENSION
+  ASTHMA
+  OTHER
+  NONE
+}
+
+enum HeardFrom {
+  SOCIAL_MEDIA
+  WORD_OF_MOUTH
+  WALK_IN
+  WELLVANTAGE_APP
+}
+
+enum InterestLevel {
+  HOT
+  WARM
+  COLD
+}
+
+enum FollowUpStatus {
+  NEW_INQUIRY
+  NEEDS_FOLLOWUP
+  ENGAGED
+  CONVERTED
+  ARCHIVED
+}
+
+/**
+ * ============================
+ * MODELS
+ * =============================
+ */
+
+model Merchant {
+  id           Int     @id @default(autoincrement())
+  gymName      String
+  firstName    String
+  lastName     String
+  addressLine1 String
+  addressLine2 String?
+  city         String
+  state        String
+  country      String
+  phoneNumber  String
+
+  leads Leads[]
+}
+
+/**
+ * CUSTOM NOTE MODEL — stored separately for multiple date-note pairs
+ */
+model LeadNote {
+  id     Int      @id @default(autoincrement())
+  date   DateTime @default(now())
+  note   String
+  leadId Int
+  lead   Leads    @relation(fields: [leadId], references: [id], onDelete: Cascade)
+}
+
+/**
+ * ============================
+ * LEADS MODEL
+ * =============================
+ */
+
+model Leads {
+  id Int @id @default(autoincrement())
+
+  assignedToId Int?
+  assignedTo   Merchant? @relation(fields: [assignedToId], references: [id])
+
+  /**
+   * BASIC DETAILS
+   */
+  firstName   String
+  lastName    String
+  phoneNumber String
+  email       String?
+  gender      Gender
+  dob         DateTime
+  height      Int?
+  weight      Int?
+
+  /**
+   * PREFERENCES
+   */
+  activityLevel         ActivityLevel?
+  wellnessGoal          WellnessGoal?
+  fitnessFocus          FitnessFocus?
+  preferredGymTime      PreferredGymTime?
+  workoutIntensity      WorkoutIntensity?
+  medicalConcern        MedicalConcern?
+  previousGymExperience Boolean           @default(false)
+
+  /**
+   * STATUS
+   */
+  inquiryDate        DateTime
+  interestLevel      InterestLevel?
+  followUpStatus     FollowUpStatus?
+  preferredPackage   String?
+  preferredPTPackage String?
+  heardFrom          HeardFrom?
+
+  /**
+   * CUSTOM NOTES
+   */
+  notes LeadNote[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

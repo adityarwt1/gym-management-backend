@@ -1,4 +1,4 @@
-import { $Enums } from '../../../generated/prisma';
+import { $Enums } from '../../generated/prisma/client.js';
 
 // Re-export Prisma enums for convenience
 export type Gender = $Enums.Gender;

@@ -40,6 +40,8 @@ export class CreateLeadDto {
   @IsInt()
   assignedToId?: number;
 
+  @IsString()
+  token: string;
   // BASIC DETAILS
   @IsString()
   firstName: string;

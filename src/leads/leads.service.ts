@@ -3,31 +3,41 @@ import {
   NotFoundException,
   BadRequestException,
   ConflictException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CreateLeadDto } from './dto/create-lead.dto';
 import { UpdateLeadDto } from './dto/update-lead.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma } from '../generated/prisma/client';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class LeadsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private jwt: JwtService,
+  ) {}
 
   /**
    * CREATE LEAD
    */
   async create(createLeadDto: CreateLeadDto) {
     try {
+      // getToken extracted value
+      const Decodeddata = this.jwt.verify(createLeadDto.token);
+      // check token validity
+      if (new Date() > new Date(Decodeddata.exp)) {
+        throw new UnauthorizedException();
+      }
+
       // Check if merchant exists if assignedToId is provided
-      if (createLeadDto.assignedToId) {
-        const merchant = await this.prisma.merchant.findUnique({
-          where: { id: createLeadDto.assignedToId },
-        });
-        if (!merchant) {
-          throw new BadRequestException(
-            `Merchant with ID ${createLeadDto.assignedToId} not found`,
-          );
-        }
+      const merchant = await this.prisma.merchant.findUnique({
+        where: { uid: Decodeddata.user.uid },
+      });
+      if (!merchant) {
+        throw new BadRequestException(
+          `Merchant with ID ${createLeadDto.assignedToId} not found`,
+        );
       }
 
       // Check for duplicate lead (same phone number)

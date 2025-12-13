@@ -122,6 +122,7 @@ export class UserService {
       throw new InternalServerErrorException((error as Error).message);
     }
   }
+
   /**
    * SHARED HELPER
    */

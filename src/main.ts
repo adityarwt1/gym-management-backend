@@ -10,6 +10,7 @@ async function bootstrap() {
     origin: [
       'http://localhost:3000',
       'https://gym-management-frontend-five.vercel.app',
+      'https://gym-management-frontend-swart.vercel.app',
     ],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],

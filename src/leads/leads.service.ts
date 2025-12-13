@@ -129,11 +129,13 @@ export class LeadsService {
       }
 
       if (query?.interestLevel) {
-        where.interestLevel = query.interestLevel as any;
+        // Convert to uppercase to match enum values
+        where.interestLevel = query.interestLevel.toUpperCase() as any;
       }
 
       if (query?.followUpStatus) {
-        where.followUpStatus = query.followUpStatus as any;
+        // Convert to uppercase to match enum values
+        where.followUpStatus = query.followUpStatus.toUpperCase() as any;
       }
 
       const [leads, total] = await Promise.all([

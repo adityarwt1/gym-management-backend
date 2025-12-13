@@ -48,8 +48,8 @@ export class CreateLeadDto {
   lastName: string;
 
   @IsString()
-  @Matches(/^\+?[1-9]\d{1,14}$/, {
-    message: 'Phone number must be a valid international format',
+  @Matches(/^\+?[1-9]\d{9,14}$/, {
+    message: 'Phone number must be in format: +919876543210 (10-15 digits)',
   })
   phoneNumber: string;
 

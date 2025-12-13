@@ -237,14 +237,16 @@ export class LeadsService {
       }
 
       // Check if merchant exists if assignedToId is being updated
-      if (updateLeadDto.assignedToId) {
-        const merchant = await this.prisma.merchant.findUnique({
-          where: { id: updateLeadDto.assignedToId },
-        });
-        if (!merchant) {
-          throw new BadRequestException(
-            `Merchant with ID ${updateLeadDto.assignedToId} not found`,
-          );
+      if (updateLeadDto.assignedToId !== undefined) {
+        if (updateLeadDto.assignedToId !== null) {
+          const merchant = await this.prisma.merchant.findUnique({
+            where: { id: updateLeadDto.assignedToId },
+          });
+          if (!merchant) {
+            throw new BadRequestException(
+              `Merchant with ID ${updateLeadDto.assignedToId} not found`,
+            );
+          }
         }
       }
 

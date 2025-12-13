@@ -19,30 +19,52 @@ export class LeadsService {
   ) {}
 
   /**
+   * Verify and extract merchant from token
+   */
+  private async verifyTokenAndGetMerchant(token: string) {
+    try {
+      const decodedData = this.jwt.verify(token);
+
+      if (new Date() > new Date(decodedData.exp * 1000)) {
+        throw new UnauthorizedException('Token expired');
+      }
+
+      const merchant = await this.prisma.merchant.findUnique({
+        where: { uid: decodedData.uid },
+      });
+
+      if (!merchant) {
+        throw new BadRequestException('Merchant account not found');
+      }
+
+      return merchant;
+    } catch (error) {
+      if (
+        error instanceof UnauthorizedException ||
+        error instanceof BadRequestException
+      ) {
+        throw error;
+      }
+      throw new UnauthorizedException('Invalid token');
+    }
+  }
+
+  /**
    * CREATE LEAD
    */
   async create(createLeadDto: CreateLeadDto) {
     try {
-      // getToken extracted value
-      const Decodeddata = this.jwt.verify(createLeadDto.token);
-      // check token validity
-      if (new Date() > new Date(Decodeddata.exp)) {
-        throw new UnauthorizedException();
-      }
+      // Verify token and get merchant
+      const merchant = await this.verifyTokenAndGetMerchant(
+        createLeadDto.token,
+      );
 
-      // Check if merchant exists if assignedToId is provided
-      const merchant = await this.prisma.merchant.findUnique({
-        where: { uid: Decodeddata.user.uid },
-      });
-      if (!merchant) {
-        throw new BadRequestException(
-          `Merchant with ID ${createLeadDto.assignedToId} not found`,
-        );
-      }
-
-      // Check for duplicate lead (same phone number)
+      // Check for duplicate lead (same phone number for this merchant)
       const existingLead = await this.prisma.leads.findFirst({
-        where: { phoneNumber: createLeadDto.phoneNumber },
+        where: {
+          phoneNumber: createLeadDto.phoneNumber,
+          assignedToId: merchant.id,
+        },
       });
 
       if (existingLead) {
@@ -52,7 +74,7 @@ export class LeadsService {
       }
 
       // Prepare notes data if provided
-      const notesData = createLeadDto.notes
+      const notesData = createLeadDto.notes?.length
         ? {
             create: createLeadDto.notes.map((note) => ({
               note: note.note,
@@ -85,7 +107,7 @@ export class LeadsService {
           preferredPackage: createLeadDto.preferredPackage,
           preferredPTPackage: createLeadDto.preferredPTPackage,
           heardFrom: createLeadDto.heardFrom,
-          assignedToId: createLeadDto.assignedToId,
+          assignedToId: merchant.id, // Use merchant ID from token
           notes: notesData,
         },
         include: {
@@ -109,7 +131,8 @@ export class LeadsService {
     } catch (error) {
       if (
         error instanceof BadRequestException ||
-        error instanceof ConflictException
+        error instanceof ConflictException ||
+        error instanceof UnauthorizedException
       ) {
         throw error;
       }
@@ -139,12 +162,10 @@ export class LeadsService {
       }
 
       if (query?.interestLevel) {
-        // Convert to uppercase to match enum values
         where.interestLevel = query.interestLevel.toUpperCase() as any;
       }
 
       if (query?.followUpStatus) {
-        // Convert to uppercase to match enum values
         where.followUpStatus = query.followUpStatus.toUpperCase() as any;
       }
 
@@ -236,28 +257,21 @@ export class LeadsService {
    */
   async update(id: number, updateLeadDto: UpdateLeadDto) {
     try {
-      // Check if lead exists
-      const existingLead = await this.prisma.leads.findUnique({
-        where: { id },
+      // Verify token and get merchant
+      const merchant = await this.jwt.verify(updateLeadDto.token as string);
+
+      // Check if lead exists and belongs to this merchant
+      const existingLead = await this.prisma.leads.findFirst({
+        where: {
+          id,
+        },
         include: { notes: true },
       });
 
       if (!existingLead) {
-        throw new NotFoundException(`Lead with ID ${id} not found`);
-      }
-
-      // Check if merchant exists if assignedToId is being updated
-      if (updateLeadDto.assignedToId !== undefined) {
-        if (updateLeadDto.assignedToId !== null) {
-          const merchant = await this.prisma.merchant.findUnique({
-            where: { id: updateLeadDto.assignedToId },
-          });
-          if (!merchant) {
-            throw new BadRequestException(
-              `Merchant with ID ${updateLeadDto.assignedToId} not found`,
-            );
-          }
-        }
+        throw new NotFoundException(
+          `Lead with ID ${id} not found or you don't have access to it`,
+        );
       }
 
       // Check for duplicate phone number if updating
@@ -268,6 +282,7 @@ export class LeadsService {
         const duplicate = await this.prisma.leads.findFirst({
           where: {
             phoneNumber: updateLeadDto.phoneNumber,
+            assignedToId: merchant.id,
             NOT: { id },
           },
         });
@@ -280,8 +295,7 @@ export class LeadsService {
 
       // Handle notes update
       let notesOperation = {};
-      if (updateLeadDto.notes) {
-        // Delete existing notes and create new ones
+      if (updateLeadDto.notes && updateLeadDto.notes.length > 0) {
         notesOperation = {
           deleteMany: {},
           create: updateLeadDto.notes.map((note) => ({
@@ -291,66 +305,52 @@ export class LeadsService {
         };
       }
 
-      // Prepare update data
-      const updateData: any = {
-        ...(updateLeadDto.firstName && { firstName: updateLeadDto.firstName }),
-        ...(updateLeadDto.lastName && { lastName: updateLeadDto.lastName }),
-        ...(updateLeadDto.phoneNumber && {
-          phoneNumber: updateLeadDto.phoneNumber,
-        }),
-        ...(updateLeadDto.email !== undefined && {
-          email: updateLeadDto.email,
-        }),
-        ...(updateLeadDto.gender && { gender: updateLeadDto.gender }),
-        ...(updateLeadDto.dob && { dob: new Date(updateLeadDto.dob) }),
-        ...(updateLeadDto.height !== undefined && {
-          height: updateLeadDto.height,
-        }),
-        ...(updateLeadDto.weight !== undefined && {
-          weight: updateLeadDto.weight,
-        }),
-        ...(updateLeadDto.activityLevel && {
-          activityLevel: updateLeadDto.activityLevel,
-        }),
-        ...(updateLeadDto.wellnessGoal && {
-          wellnessGoal: updateLeadDto.wellnessGoal,
-        }),
-        ...(updateLeadDto.fitnessFocus && {
-          fitnessFocus: updateLeadDto.fitnessFocus,
-        }),
-        ...(updateLeadDto.preferredGymTime && {
-          preferredGymTime: updateLeadDto.preferredGymTime,
-        }),
-        ...(updateLeadDto.workoutIntensity && {
-          workoutIntensity: updateLeadDto.workoutIntensity,
-        }),
-        ...(updateLeadDto.medicalConcern && {
-          medicalConcern: updateLeadDto.medicalConcern,
-        }),
-        ...(updateLeadDto.previousGymExperience !== undefined && {
-          previousGymExperience: updateLeadDto.previousGymExperience,
-        }),
-        ...(updateLeadDto.inquiryDate && {
-          inquiryDate: new Date(updateLeadDto.inquiryDate),
-        }),
-        ...(updateLeadDto.interestLevel && {
-          interestLevel: updateLeadDto.interestLevel,
-        }),
-        ...(updateLeadDto.followUpStatus && {
-          followUpStatus: updateLeadDto.followUpStatus,
-        }),
-        ...(updateLeadDto.preferredPackage !== undefined && {
-          preferredPackage: updateLeadDto.preferredPackage,
-        }),
-        ...(updateLeadDto.preferredPTPackage !== undefined && {
-          preferredPTPackage: updateLeadDto.preferredPTPackage,
-        }),
-        ...(updateLeadDto.heardFrom && { heardFrom: updateLeadDto.heardFrom }),
-        ...(updateLeadDto.assignedToId !== undefined && {
-          assignedToId: updateLeadDto.assignedToId,
-        }),
-        ...(updateLeadDto.notes && { notes: notesOperation }),
-      };
+      // Prepare update data - only include fields that are provided
+      const updateData: any = {};
+
+      if (updateLeadDto.firstName !== undefined)
+        updateData.firstName = updateLeadDto.firstName;
+      if (updateLeadDto.lastName !== undefined)
+        updateData.lastName = updateLeadDto.lastName;
+      if (updateLeadDto.phoneNumber !== undefined)
+        updateData.phoneNumber = updateLeadDto.phoneNumber;
+      if (updateLeadDto.email !== undefined)
+        updateData.email = updateLeadDto.email;
+      if (updateLeadDto.gender !== undefined)
+        updateData.gender = updateLeadDto.gender;
+      if (updateLeadDto.dob !== undefined)
+        updateData.dob = new Date(updateLeadDto.dob);
+      if (updateLeadDto.height !== undefined)
+        updateData.height = updateLeadDto.height;
+      if (updateLeadDto.weight !== undefined)
+        updateData.weight = updateLeadDto.weight;
+      if (updateLeadDto.activityLevel !== undefined)
+        updateData.activityLevel = updateLeadDto.activityLevel;
+      if (updateLeadDto.wellnessGoal !== undefined)
+        updateData.wellnessGoal = updateLeadDto.wellnessGoal;
+      if (updateLeadDto.fitnessFocus !== undefined)
+        updateData.fitnessFocus = updateLeadDto.fitnessFocus;
+      if (updateLeadDto.preferredGymTime !== undefined)
+        updateData.preferredGymTime = updateLeadDto.preferredGymTime;
+      if (updateLeadDto.workoutIntensity !== undefined)
+        updateData.workoutIntensity = updateLeadDto.workoutIntensity;
+      if (updateLeadDto.medicalConcern !== undefined)
+        updateData.medicalConcern = updateLeadDto.medicalConcern;
+      if (updateLeadDto.previousGymExperience !== undefined)
+        updateData.previousGymExperience = updateLeadDto.previousGymExperience;
+      if (updateLeadDto.inquiryDate !== undefined)
+        updateData.inquiryDate = new Date(updateLeadDto.inquiryDate);
+      if (updateLeadDto.interestLevel !== undefined)
+        updateData.interestLevel = updateLeadDto.interestLevel;
+      if (updateLeadDto.followUpStatus !== undefined)
+        updateData.followUpStatus = updateLeadDto.followUpStatus;
+      if (updateLeadDto.preferredPackage !== undefined)
+        updateData.preferredPackage = updateLeadDto.preferredPackage;
+      if (updateLeadDto.preferredPTPackage !== undefined)
+        updateData.preferredPTPackage = updateLeadDto.preferredPTPackage;
+      if (updateLeadDto.heardFrom !== undefined)
+        updateData.heardFrom = updateLeadDto.heardFrom;
+      if (updateLeadDto.notes) updateData.notes = notesOperation;
 
       const updatedLead = await this.prisma.leads.update({
         where: { id },
@@ -381,7 +381,8 @@ export class LeadsService {
       if (
         error instanceof NotFoundException ||
         error instanceof BadRequestException ||
-        error instanceof ConflictException
+        error instanceof ConflictException ||
+        error instanceof UnauthorizedException
       ) {
         throw error;
       }

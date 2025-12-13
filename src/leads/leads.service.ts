@@ -144,21 +144,44 @@ export class LeadsService {
    * FIND ALL LEADS
    */
   async findAll(query?: {
-    assignedToId?: number;
+    token: string;
     interestLevel?: string;
     followUpStatus?: string;
     page?: number;
     limit?: number;
   }) {
     try {
+      /// if query not exist
+      if (!query) {
+        throw new BadRequestException();
+      }
+      if (!query?.token) {
+        throw new UnauthorizedException();
+      }
       const page = query?.page || 1;
       const limit = query?.limit || 10;
       const skip = (page - 1) * limit;
 
       const where: Prisma.LeadsWhereInput = {};
+      // getting merchant id
+      if (!query?.token) {
+        throw new BadRequestException();
+      }
 
-      if (query?.assignedToId) {
-        where.assignedToId = query.assignedToId;
+      const decoded = this.jwt.verify(query?.token as string);
+      console.log(decoded);
+      // get the merchant id
+      const merchant = await this.prisma.merchant.findUnique({
+        where: {
+          uid: decoded.uid,
+        },
+        select: {
+          id: true,
+        },
+      });
+      console.log('merchant data', merchant);
+      if (merchant?.id) {
+        where.assignedToId = merchant.id as number;
       }
 
       if (query?.interestLevel) {

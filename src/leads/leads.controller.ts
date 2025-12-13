@@ -39,14 +39,14 @@ export class LeadsController {
    */
   @Get()
   findAll(
-    @Query('assignedToId') assignedToId?: string,
+    @Query('token') token: string,
     @Query('interestLevel') interestLevel?: string,
     @Query('followUpStatus') followUpStatus?: string,
     @Query('page') page?: string,
     @Query('limit') limit?: string,
   ) {
     return this.leadsService.findAll({
-      assignedToId: assignedToId ? parseInt(assignedToId) : undefined,
+      token,
       interestLevel,
       followUpStatus,
       page: page ? parseInt(page) : 1,

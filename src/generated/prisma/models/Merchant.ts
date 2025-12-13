@@ -355,7 +355,7 @@ export type MerchantCreateInput = {
 
 export type MerchantUncheckedCreateInput = {
   id?: number
-  uid: string
+  uid?: string
   gymName: string
   firstName: string
   lastName: string
@@ -399,7 +399,7 @@ export type MerchantUncheckedUpdateInput = {
 
 export type MerchantCreateManyInput = {
   id?: number
-  uid: string
+  uid?: string
   gymName: string
   firstName: string
   lastName: string
@@ -637,7 +637,7 @@ export type MerchantCreateWithoutLeadsInput = {
 
 export type MerchantUncheckedCreateWithoutLeadsInput = {
   id?: number
-  uid: string
+  uid?: string
   gymName: string
   firstName: string
   lastName: string

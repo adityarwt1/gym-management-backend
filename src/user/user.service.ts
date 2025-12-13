@@ -24,10 +24,27 @@ export class UserService {
   async create(data: CreateUserDto) {
     const existing = await this.prisma.user.findUnique({
       where: { uid: data.uid },
+      select: {
+        uid: true,
+      },
     });
 
     if (existing) {
-      throw new ConflictException('User already exists.');
+      // for handle the multiple time for the form
+      // throw new ConflictException('User already exists.');
+      const token = this.jwtService.sign(
+        { uid: data.uid },
+        {
+          expiresIn: '7d',
+          issuer: 'WellVantage',
+        },
+      );
+
+      return {
+        success: true,
+        token,
+        existing,
+      };
     }
 
     try {

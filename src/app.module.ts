@@ -4,9 +4,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { MerchantModule } from './merchant/merchant.module';
-import { LeadsModule } from './leads/leads.module';
 import { UserModule } from './user/user.module';
 import { OtpModule } from './otp/otp.module';
+import { LeadsModule } from './leads/leads.module';
 
 @Module({
   imports: [
@@ -16,10 +16,10 @@ import { OtpModule } from './otp/otp.module';
     PrismaModule,
     UserModule,
     MerchantModule,
-    LeadsModule,
     UserModule,
     UserModule,
     OtpModule,
+    LeadsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,50 +1,137 @@
-import { $Enums } from '../../generated/prisma/client.js';
+import {
+  IsString,
+  IsEmail,
+  IsEnum,
+  IsOptional,
+  IsInt,
+  IsBoolean,
+  IsDateString,
+  IsArray,
+  ValidateNested,
+  Min,
+  Max,
+  Matches,
+} from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  Gender,
+  ActivityLevel,
+  WellnessGoal,
+  FitnessFocus,
+  PreferredGymTime,
+  WorkoutIntensity,
+  MedicalConcern,
+  HeardFrom,
+  InterestLevel,
+  FollowUpStatus,
+} from '../../generated/prisma/client';
 
-// Re-export Prisma enums for convenience
-export type Gender = $Enums.Gender;
-export type ActivityLevel = $Enums.ActivityLevel;
-export type WellnessGoal = $Enums.WellnessGoal;
-export type FitnessFocus = $Enums.FitnessFocus;
-export type PreferredGymTime = $Enums.PreferredGymTime;
-export type WorkoutIntensity = $Enums.WorkoutIntensity;
-export type MedicalConcern = $Enums.MedicalConcern;
-export type HeardFrom = $Enums.HeardFrom;
-export type InterestLevel = $Enums.InterestLevel;
-export type FollowUpStatus = $Enums.FollowUpStatus;
+class CreateLeadNoteDto {
+  @IsOptional()
+  @IsDateString()
+  date?: string;
 
-// Export enum values for validation
-export const Gender = $Enums.Gender;
-export const ActivityLevel = $Enums.ActivityLevel;
-export const WellnessGoal = $Enums.WellnessGoal;
-export const FitnessFocus = $Enums.FitnessFocus;
-export const PreferredGymTime = $Enums.PreferredGymTime;
-export const WorkoutIntensity = $Enums.WorkoutIntensity;
-export const MedicalConcern = $Enums.MedicalConcern;
-export const HeardFrom = $Enums.HeardFrom;
-export const InterestLevel = $Enums.InterestLevel;
-export const FollowUpStatus = $Enums.FollowUpStatus;
+  @IsString()
+  note: string;
+}
 
 export class CreateLeadDto {
+  @IsOptional()
+  @IsInt()
   assignedToId?: number;
+
+  // BASIC DETAILS
+  @IsString()
   firstName: string;
+
+  @IsString()
   lastName: string;
+
+  @IsString()
+  @Matches(/^\+?[1-9]\d{1,14}$/, {
+    message: 'Phone number must be a valid international format',
+  })
   phoneNumber: string;
+
+  @IsOptional()
+  @IsEmail()
   email?: string;
+
+  @IsEnum(Gender)
   gender: Gender;
-  dob: Date;
+
+  @IsDateString()
+  dob: string;
+
+  @IsOptional()
+  @IsInt()
+  @Min(50)
+  @Max(300)
   height?: number;
+
+  @IsOptional()
+  @IsInt()
+  @Min(20)
+  @Max(500)
   weight?: number;
+
+  // PREFERENCES
+  @IsOptional()
+  @IsEnum(ActivityLevel)
   activityLevel?: ActivityLevel;
+
+  @IsOptional()
+  @IsEnum(WellnessGoal)
   wellnessGoal?: WellnessGoal;
+
+  @IsOptional()
+  @IsEnum(FitnessFocus)
   fitnessFocus?: FitnessFocus;
+
+  @IsOptional()
+  @IsEnum(PreferredGymTime)
   preferredGymTime?: PreferredGymTime;
+
+  @IsOptional()
+  @IsEnum(WorkoutIntensity)
   workoutIntensity?: WorkoutIntensity;
+
+  @IsOptional()
+  @IsEnum(MedicalConcern)
   medicalConcern?: MedicalConcern;
+
+  @IsOptional()
+  @IsBoolean()
   previousGymExperience?: boolean;
-  inquiryDate: Date;
+
+  // STATUS
+  @IsDateString()
+  inquiryDate: string;
+
+  @IsOptional()
+  @IsEnum(InterestLevel)
   interestLevel?: InterestLevel;
+
+  @IsOptional()
+  @IsEnum(FollowUpStatus)
   followUpStatus?: FollowUpStatus;
+
+  @IsOptional()
+  @IsString()
   preferredPackage?: string;
+
+  @IsOptional()
+  @IsString()
   preferredPTPackage?: string;
+
+  @IsOptional()
+  @IsEnum(HeardFrom)
   heardFrom?: HeardFrom;
+
+  // NOTES
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateLeadNoteDto)
+  notes?: CreateLeadNoteDto[];
 }
